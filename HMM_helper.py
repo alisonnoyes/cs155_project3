@@ -127,6 +127,24 @@ def sample_sentence(hmm, obs_map, n_words=100):
 
     return ' '.join(sentence).capitalize() + '...'
 
+def sample_sonnet(hmm, obs_map, n_words = 100):
+    obs_map_r = obs_map_reverser(obs_map)
+    
+    emission, states = hmm.generate_emission_poem(n_words)
+
+    poem = []
+    for e in emission:
+        for i, s in enumerate(e):
+            sentence = []
+            for l in s:
+                sentence.append(obs_map_r[l])
+            if i != len(e)-1 : 
+                poem.append(' '.join(sentence).capitalize() + ',\n')
+            else: 
+                poem.append(' '.join(sentence).capitalize() + '.\n')
+            
+    return ''.join(poem)
+
 
 ####################
 # HMM VISUALIZATION FUNCTIONS

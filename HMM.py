@@ -427,6 +427,56 @@ class HiddenMarkovModel:
 
         return emission, states
 
+def generate_emission_poem(self, M):
+        """
+        In the generate emission poem function we want to generate emissions in the form of a the poem:
+        3 quatrain, 1 couplet. 
+        """
+        poem_emissions = []
+        poem_states = []
+        
+        sonnet_structure = [4,4,4,2] #number of lines per structure in sonnet
+        
+        for num in sonnet_structure:
+            
+            structure_emission = []
+            structure_states = []
+            
+            for n in range(num):  
+                line_emission = []
+                line_states = []
+                state = random.choice(range(self.L))
+                for t in range(M):
+                    line_states.append(state)
+
+                    # Sample next observation.
+                    rand_var = random.uniform(0, 1)
+                    next_obs = 0
+
+                    while rand_var > 0:
+                        rand_var -= self.O[state][next_obs]
+                        next_obs += 1
+
+                    next_obs -= 1
+                    line_emission.append(next_obs)
+
+                    # Sample next state.
+                    rand_var = random.uniform(0, 1)
+                    next_state = 0
+
+                    while rand_var > 0:
+                        rand_var -= self.A[state][next_state]
+                        next_state += 1
+
+                    next_state -= 1
+                    state = next_state
+                structure_emission.append(line_emission)
+                structure_states.append(line_states)
+            poem_emissions.append(structure_emission)
+            poem_states.append(structure_states)
+           
+        return poem_emissions, poem_states    
+
 
     def probability_alphas(self, x):
         '''
